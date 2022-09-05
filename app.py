@@ -29,9 +29,10 @@ def home():
 def pesquisar_oferta():
     return render_template("cliente_ofertas_pesquisa.html")
 
-@app.get("/fretadora/ofertas")
-def fretadora_ofertas_view():
-    return render_template("fretadora_ofertas.html")
+@app.get("/fretadora/")
+def fretadoras_view():
+    ofertas_lista = db.session.query(Oferta).all()
+    return render_template("fretadora.html", ofertas_lista = ofertas_lista)
 
 @app.get("/fretadora/ofertas/cadastro")
 def fretadora_oferta_cadastro_view():
