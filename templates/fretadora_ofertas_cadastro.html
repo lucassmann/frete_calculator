@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastrar Oferta</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  </head>
+
+  <body>
+    <div style="margin-top: 50px" class="ui container">
+      <h1 class="ui center aligned header">Cadastro de Oferta</h1>
+
+      <form class="ui form" action="/fretadora/ofertas/cadastro/criar" method="post">
+        <div class="field">
+            <label>Fretadora</label>
+            <input type="text" name="empresa" placeholder="Insira o nome da empresa fretadora" required/><br />
+          </div>
+        <div class="field">
+          <label for="categorias">Categoria de transporte:</label>
+          <select name="categorias" id="categorias" required>
+            <option disabled selected value>-- escolha uma opção --</option>
+            <option value="1">Transporte rodoviário de carga lotação</option>
+            <option value="2">
+              Operações em que haja a contratação apenas do veículo automotor de cargas
+            </option>
+            <option value="3">
+              Transporte rodoviário de carga lota cão de alto desempenho
+            </option>
+            <option value="4">
+              Operações em que haja a contratação apenas do veículo automotor de cargas de alto desempenho
+            </option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tipo de Carga:</label>
+          <select name="carga" required>
+            <option disabled selected value>-- escolha uma opção --</option>
+            <option value="1">Granel sólido</option>
+            <option value="2">Granel líquido</option>
+            <option value="3">Frigorificada ou Aquecida</option>
+            <option value="4">Conteinerizada</option>
+            <option value="5">Carga Geral</option>
+            <option value="6">Neogranel</option>
+            <option value="7">Perigosa (granel sólido)</option>
+            <option value="8">Perigosa (granel líquido)</option>
+            <option value="9">Perigosa (frigorificada ou aquecida)</option>
+            <option value="10">Perigosa (conteinerizada)</option>
+            <option value="11">Perigosa (carga geral)</option>
+            <option value="12">Carga Granel Pressurizada</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="eixos">Eixos</label>
+          <select name="eixos" id="eixos" required>
+            <option disabled selected value>-- escolha uma opção --</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Valor por Km (R$/Km)</label>
+          <input 
+            type="number"
+            name="valor_km"
+            placeholder="Valor por Km (R$/Km)"
+            required
+          /><br />
+        </div>
+        <div class="field">
+            <label>Valor Carga/Descarga (R$)</label>
+            <input 
+              type="number"
+              name="valor_carga_descarga"
+              placeholder="Valor Carga/Descarga (R$)"
+              required
+            /><br />
+          </div>
+
+        <button class="ui blue button" type="submit">Cadastrar Oferta</button>
+      </form>
+
+  </body>
+</html>
