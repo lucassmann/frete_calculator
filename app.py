@@ -18,6 +18,7 @@ class Oferta(db.Model):
     categoria_transporte = db.Column(db.String(100))
     tipo_carga = db.Column(db.String(100))
     eixos = db.Column(db.Integer)
+    # implementar CNPJ!!!!!
     
 db.create_all()
 
