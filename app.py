@@ -52,7 +52,6 @@ def oferta_post():
     db.session.add(new_oferta)
     db.session.commit()
     return redirect(url_for("home"))
-#oi
 
 
 
