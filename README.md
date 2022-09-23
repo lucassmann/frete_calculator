@@ -3,8 +3,7 @@ Projeto de faculdade: um website simples para oferecer e encontrar serviços de 
 College project: a simple website to offer and find shipping services.
 
 # Instruções:
-## Linguagem de programação utilizada no projeto PI II-A e disciplinas relacionadas:
-Python 3
+## Python3 (linguagem de programação utilizada)
 https://www.python.org/downloads/
 *Necessita instalação para usar 
 
