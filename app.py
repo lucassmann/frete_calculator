@@ -26,20 +26,25 @@ db.create_all()
 def home():
     return render_template("fretadora_ofertas_cadastro.html")
 
-@app.get("/cliente/ofertas/pesquisa")
-def pesquisar_oferta():
-    return render_template("cliente_ofertas_pesquisa.html")
+@app.get("/ofertas/busca")
+def pesquisar_oferta_view():
+    return render_template("ofertas_busca.html")
+
+@app.get("/ofertas/")
+def ofertas_view():
+    ofertas_lista = db.session.query(Oferta).all()
+    return render_template("ofetas.html", ofertas_lista = ofertas_lista)
 
 @app.get("/fretadora/")
 def fretadoras_view():
     ofertas_lista = db.session.query(Oferta).all()
     return render_template("fretadora.html", ofertas_lista = ofertas_lista)
 
-@app.get("/fretadora/ofertas/cadastro")
-def fretadora_oferta_cadastro_view():
-    return render_template("fretadora_ofertas_cadastro.html")
+@app.get("/ofertas/cadastro")
+def ofertas_cadastro_view():
+    return render_template("ofertas_cadastro.html")
 
-@app.post("/fretadora/ofertas/cadastro/criar")
+@app.post("/ofertas/cadastro/criar")
 def oferta_post():
     fretadora = request.form.get("fretadora")
     categoria_transporte = request.form.get("categorias")
@@ -51,7 +56,7 @@ def oferta_post():
     new_oferta = Oferta(fretadora=fretadora, categoria_transporte=categoria_transporte, tipo_carga = tipo_carga, eixos = eixos, valor_km = valor_km, valor_carga_descarga = valor_carga_descarga)
     db.session.add(new_oferta)
     db.session.commit()
-    return redirect(url_for("home"))
+    return redirect(url_for("ofertas_cadastro_view"))
 
 
 
