@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ofertas para sua busca</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  </head>
+  <body>
+    <div style="margin-top: 50px" class="ui container">
+      <h1 class="ui center aligned header">Lista de Ofertas para sua busca</h1>
+    </div>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Fretadora</th>
+          <th>R$/Km</th>
+          <th>Carga/Descarga(R$)</th>
+          <th>Total(R$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for oferta in ofertas_lista %}
+        <tr>
+          <td data-label="Fretadora">{{oferta.fretadora}}</td>
+          <td data-label="R$/Km">{{oferta.valor_km}}</td>
+          <td data-label="Carga/Descarga(R$)">
+            {{oferta.valor_carga_descarga}}
+          </td>
+          <td data-label="Total(R$)">
+            {{ ( oferta.valor_km|float * distancia|float ) +
+            oferta.valor_carga_descarga|float}}
+          </td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  </body>
+</html>

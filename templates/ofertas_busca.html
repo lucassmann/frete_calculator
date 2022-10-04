@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ofertas</title>
+    <title>Busca Ofertas</title>
 
     <link
       rel="stylesheet"
@@ -16,22 +16,20 @@
     <div style="margin-top: 50px" class="ui container">
       <h1 class="ui center aligned header">Ofertas</h1>
 
-      <form class="ui form" action="/add" method="post">
+      <form class="ui form" action="/ofertas/busca/resultado" method="post">
         <div class="field">
           <label for="categorias">Categoria de transporte:</label>
-          <select name="categorias" id="categorias">
+          <select name="categorias" id="categorias" required>
             <option disabled selected value>-- escolha uma opção --</option>
-            <option value="1">Transporte rodoviário de carga lotação</option>
-            <option value="2">
-              Operações em que haja a contratação apenas do veículo automotor de
-              cargas
+            <option value="Transporte rodoviário de carga lotação">Transporte rodoviário de carga lotação</option>
+            <option value="Operações em que haja a contratação apenas do veículo automotor de cargas">
+              Operações em que haja a contratação apenas do veículo automotor de cargas
             </option>
-            <option value="3">
+            <option value="Transporte rodoviário de carga lota cão de alto desempenho">
               Transporte rodoviário de carga lota cão de alto desempenho
             </option>
-            <option value="4">
-              Operações em que haja a contratação apenas do veículo automotor de
-              cargas de alto desempenho
+            <option value="Operações em que haja a contratação apenas do veículo automotor de cargas de alto desempenho">
+              Operações em que haja a contratação apenas do veículo automotor de cargas de alto desempenho
             </option>
           </select>
         </div>
@@ -39,18 +37,18 @@
           <label>Tipo de Carga:</label>
           <select name="carga" required>
             <option disabled selected value>-- escolha uma opção --</option>
-            <option value="1">Granel sólido</option>
-            <option value="2">Granel líquido</option>
-            <option value="3">Frigorificada ou Aquecida</option>
-            <option value="4">Conteinerizada</option>
-            <option value="5">Carga Geral</option>
-            <option value="6">Neogranel</option>
-            <option value="7">Perigosa (granel sólido)</option>
-            <option value="8">Perigosa (granel líquido)</option>
-            <option value="9">Perigosa (frigorificada ou aquecida)</option>
-            <option value="10">Perigosa (conteinerizada)</option>
-            <option value="11">Perigosa (carga geral)</option>
-            <option value="12">Carga Granel Pressurizada</option>
+            <option value="Granel sólido">Granel sólido</option>
+            <option value="Granel líquido">Granel líquido</option>
+            <option value="Frigorificada ou Aquecida">Frigorificada ou Aquecida</option>
+            <option value="Conteinerizada">Conteinerizada</option>
+            <option value="Carga Geral">Carga Geral</option>
+            <option value="Neogranel">Neogranel</option>
+            <option value="Perigosa (granel sólido)">Perigosa (granel sólido)</option>
+            <option value="Perigosa (granel líquido)">Perigosa (granel líquido)</option>
+            <option value="Perigosa (frigorificada ou aquecida)">Perigosa (frigorificada ou aquecida)</option>
+            <option value="Perigosa (conteinerizada)">Perigosa (conteinerizada)</option>
+            <option value="Perigosa (carga geral)">Perigosa (carga geral)</option>
+            <option value="Carga Granel Pressurizada">Carga Granel Pressurizada</option>
           </select>
         </div>
         <div class="field">
