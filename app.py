@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -65,6 +65,8 @@ def oferta_post():
     valor_km = request.form.get("valor_km")
     valor_carga_descarga = request.form.get("valor_carga_descarga")
     
+    if (int(valor_km) < 2):
+        return render_template("erroANTT.html")
     new_oferta = Oferta(fretadora=fretadora, categoria_transporte=categoria_transporte, tipo_carga = tipo_carga, eixos = eixos, valor_km = valor_km, valor_carga_descarga = valor_carga_descarga)
     db.session.add(new_oferta)
     db.session.commit()
@@ -75,4 +77,6 @@ def fretadoras_view():
     ofertas_lista = db.session.query(Oferta).order_by(Oferta.fretadora).all()
     # .order_by(Oferta.fretadora)
     return render_template("fretadora.html", ofertas_lista = ofertas_lista)
+
+
 
