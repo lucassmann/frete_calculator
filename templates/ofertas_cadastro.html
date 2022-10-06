@@ -73,6 +73,8 @@
           <label>Valor por Km (R$/Km)</label>
           <input 
             type="number"
+            step="0.01"
+            min="0"
             name="valor_km"
             placeholder="Valor por Km (R$/Km)"
             required
@@ -82,6 +84,8 @@
             <label>Valor Carga/Descarga (R$)</label>
             <input 
               type="number"
+              step="0.01"
+              min="0"
               name="valor_carga_descarga"
               placeholder="Valor Carga/Descarga (R$)"
               required
