@@ -9,16 +9,21 @@ db = SQLAlchemy(app)
 
 class Oferta(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    # mudar Integer p decimal para representar dinheiro
-    valor_km = db.Column(db.Integer)
-    valor_carga_descarga = db.Column(db.Integer)
-    # temporário! mudar para cod assim que usuários de fretador/remetente/destinatário forem implementados
+    valor_km = db.Column(db.Float)
+    valor_carga_descarga = db.Column(db.Float)
     fretadora = db.Column(db.String(100))
-    # temporário! mudar para ANTT_piso assim que for implementado com checagem de valores minimos
     categoria_transporte = db.Column(db.String(100))
     tipo_carga = db.Column(db.String(100))
     eixos = db.Column(db.Integer)
-    # implementar CNPJ!!!!!
+    
+class Piso(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    valor_km = db.Column(db.Float)
+    valor_carga_descarga = db.Column(db.Float)
+    categoria_transporte = db.Column(db.String(100))
+    tipo_carga = db.Column(db.String(100))
+    eixos = db.Column(db.Integer)
+
     
 db.create_all()
 
@@ -64,9 +69,14 @@ def oferta_post():
     eixos = request.form.get("eixos")
     valor_km = request.form.get("valor_km")
     valor_carga_descarga = request.form.get("valor_carga_descarga")
-    
-    if (int(valor_km) < 2):
-        return render_template("erroANTT.html")
+    # Valida valores de piso mínimo definidos pela legislação. 
+    # Como nem todas validações estão no escopo desse projeto no momento, não impede Ofertas de categorias, tipos e eixos não cadastradas em Piso.
+    try:
+        piso = getPiso(categoria_transporte=categoria_transporte, tipo_carga=tipo_carga, eixos=eixos)
+        if (float(valor_km) < getattr(piso, 'valor_km') or float(valor_carga_descarga) < getattr(piso,'valor_carga_descarga')):
+            return render_template("erroANTT.html")
+    except:
+        print('não foi possível validar a conformidade a legislação desta oferta')
     new_oferta = Oferta(fretadora=fretadora, categoria_transporte=categoria_transporte, tipo_carga = tipo_carga, eixos = eixos, valor_km = valor_km, valor_carga_descarga = valor_carga_descarga)
     db.session.add(new_oferta)
     db.session.commit()
@@ -78,5 +88,35 @@ def fretadoras_view():
     # .order_by(Oferta.fretadora)
     return render_template("fretadora.html", ofertas_lista = ofertas_lista)
 
+# As informações de pisos estabelecidas pela ANTT são populadas quando o servidor é ativado. Isso se dá pela natureza efêmera do banco de dados em situações de teste.
+# Devido à falta de fatores acessíveis para o cálculo desses valores, eles são inseridos manualmente com a tabela anexa na legislação.
+# Como forma de demonstrar a lógica da validação, foram inseridos os pisos para a combinação da primeira categoria de transporte e de carga constantes na legislação.
+def getPiso(categoria_transporte, tipo_carga, eixos):
+    try:
+        piso = (db.session.query(Piso).filter(
+                                            Piso.categoria_transporte.like(categoria_transporte),
+                                            Piso.tipo_carga.like(tipo_carga),
+                                            Piso.eixos.like(eixos)
+                                            )
+                                        .one()
+                )
+        return piso
+    except:
+        print('essa oferta não corresponde a um piso cadastrado')
 
+# Só funciona na primeira run por enquanto
+def populatePiso():
+    pisos = {
+    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 2, valor_km = 3.0908, valor_carga_descarga = 252.70), 
+    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 3, valor_km = 3.9886, valor_carga_descarga = 300.69),
+    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 4, valor_km = 4.5346, valor_carga_descarga = 308.26),
+    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 5, valor_km = 5.2018, valor_carga_descarga = 341.28),
+    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 6, valor_km = 5.9490, valor_carga_descarga = 381.80),
+    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 7, valor_km = 6.4105, valor_carga_descarga = 442.25),
+    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 9, valor_km = 7.3765, valor_carga_descarga = 484.22),
+    }
+    for piso in pisos:
+        db.session.add(piso)
+    db.session.commit()
 
+populatePiso()
