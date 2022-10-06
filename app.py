@@ -1,12 +1,14 @@
 from flask import Flask, flash, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
+# Configuração do Flask e SQLAlchemy
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# Modelo de Oferta de frete
 class Oferta(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     valor_km = db.Column(db.Float)
@@ -16,6 +18,7 @@ class Oferta(db.Model):
     tipo_carga = db.Column(db.String(100))
     eixos = db.Column(db.Integer)
     
+# Modelo de Piso como descrito na legislação da ANTT.
 class Piso(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     valor_km = db.Column(db.Float)
@@ -24,28 +27,34 @@ class Piso(db.Model):
     tipo_carga = db.Column(db.String(100))
     eixos = db.Column(db.Integer)
 
-    
+
 db.create_all()
 
+# Homepage com informações e direcionamentos para outras rotas.
 @app.get("/")
 def home():
     return render_template("home.html")
 
+# Página com todas as ofertas cadastradas.
 @app.get("/ofertas/")
 def ofertas_view():
     ofertas_lista = db.session.query(Oferta).order_by(Oferta.fretadora).all()
     return render_template("ofertas.html", ofertas_lista = ofertas_lista)
 
+# Página com form para busca de ofertas
 @app.get("/ofertas/busca")
 def pesquisar_oferta_view():
     return render_template("ofertas_busca.html")
 
+# Página com resultado de uma busca de ofertas, proveniente de /ofertas/busca.
+# Ação do form de /ofertas/busca
 @app.post("/ofertas/busca/resultado")
 def resultado_pesquisa_oferta_view():
     categoria_transporte = request.form.get("categorias")
     tipo_carga = request.form.get("carga")
     eixos = request.form.get("eixos")
     distancia = request.form.get("distancia")
+    # Filtra o banco de dados de Oferta usando as informações do form de busca e ordena pelo valor total
     ofertas_lista = (db.session.query(Oferta)
                         .filter(
                             Oferta.categoria_transporte.like(categoria_transporte),
@@ -57,10 +66,14 @@ def resultado_pesquisa_oferta_view():
                     )
     return render_template("ofertas_busca_resultado.html", ofertas_lista = ofertas_lista, distancia = distancia)
 
+# Form de cadastro de ofertas
 @app.get("/ofertas/cadastro")
 def ofertas_cadastro_view():
     return render_template("ofertas_cadastro.html")
 
+# Ação do form de cadastro de ofertas
+# Cadastra a oferta no banco de dados usando os valores do form em /ofertas/cadastro
+# Valida Oferta de acordo com Piso de atributos correspondentes
 @app.post("/ofertas/cadastro/criar")
 def oferta_post():
     fretadora = request.form.get("fretadora")
@@ -82,11 +95,12 @@ def oferta_post():
     db.session.commit()
     return redirect(url_for("ofertas_cadastro_view"))
 
-@app.get("/fretadora/")
+# Página com todas fretadoras cadastradas
+@app.get("/fretadoras/")
 def fretadoras_view():
     ofertas_lista = db.session.query(Oferta).order_by(Oferta.fretadora).all()
     # .order_by(Oferta.fretadora)
-    return render_template("fretadora.html", ofertas_lista = ofertas_lista)
+    return render_template("fretadoras.html", ofertas_lista = ofertas_lista)
 
 # As informações de pisos estabelecidas pela ANTT são populadas quando o servidor é ativado. Isso se dá pela natureza efêmera do banco de dados em situações de teste.
 # Devido à falta de fatores acessíveis para o cálculo desses valores, eles são inseridos manualmente com a tabela anexa na legislação.
@@ -104,8 +118,10 @@ def getPiso(categoria_transporte, tipo_carga, eixos):
     except:
         print('essa oferta não corresponde a um piso cadastrado')
 
-# Só funciona na primeira run por enquanto
+# Popula os pisos de acordo com a ANTT no banco de dados se ainda não estiverem populados.
 def populatePiso():
+    if (db.session.query(Piso).first() is not None):
+        return
     pisos = {
     Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 2, valor_km = 3.0908, valor_carga_descarga = 252.70), 
     Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 3, valor_km = 3.9886, valor_carga_descarga = 300.69),
