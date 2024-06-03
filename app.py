@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 # Configuração do Flask e SQLAlchemy
@@ -28,7 +28,10 @@ class Piso(db.Model):
     eixos = db.Column(db.Integer)
 
 
-db.create_all()
+with app.app_context():
+    db.create_all()
+    db.session.commit()
+
 
 # Homepage com informações e direcionamentos para outras rotas.
 @app.get("/")
@@ -120,19 +123,20 @@ def getPiso(categoria_transporte, tipo_carga, eixos):
 
 # Popula os pisos de acordo com a ANTT no banco de dados se ainda não estiverem populados.
 def populatePiso():
-    if (db.session.query(Piso).first() is not None):
-        return
-    pisos = {
-    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 2, valor_km = 3.0908, valor_carga_descarga = 252.70), 
-    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 3, valor_km = 3.9886, valor_carga_descarga = 300.69),
-    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 4, valor_km = 4.5346, valor_carga_descarga = 308.26),
-    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 5, valor_km = 5.2018, valor_carga_descarga = 341.28),
-    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 6, valor_km = 5.9490, valor_carga_descarga = 381.80),
-    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 7, valor_km = 6.4105, valor_carga_descarga = 442.25),
-    Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 9, valor_km = 7.3765, valor_carga_descarga = 484.22),
-    }
-    for piso in pisos:
-        db.session.add(piso)
-    db.session.commit()
+    with app.app_context():
+        if (db.session.query(Piso).first() is not None):
+            return
+        pisos = {
+        Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 2, valor_km = 3.0908, valor_carga_descarga = 252.70), 
+        Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 3, valor_km = 3.9886, valor_carga_descarga = 300.69),
+        Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 4, valor_km = 4.5346, valor_carga_descarga = 308.26),
+        Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 5, valor_km = 5.2018, valor_carga_descarga = 341.28),
+        Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 6, valor_km = 5.9490, valor_carga_descarga = 381.80),
+        Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 7, valor_km = 6.4105, valor_carga_descarga = 442.25),
+        Piso(categoria_transporte='Transporte rodoviário de carga lotação', tipo_carga = 'Granel sólido', eixos = 9, valor_km = 7.3765, valor_carga_descarga = 484.22),
+        }
+        for piso in pisos:
+            db.session.add(piso)
+        db.session.commit()
 
 populatePiso()
